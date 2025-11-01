@@ -13,13 +13,13 @@ export const fetchOpenApiSchemaTool = {
   
   ## Parameters:
   - schemaUrl: [Required] URL where the OpenAPI schema is published or the API base URL
-  - authType: [Optional] Authentication method if the schema requires auth: 'bearer', 'basic', 'interactive', or 'none'
+  - authType: [Optional] Authentication method if the schema requires auth: 'bearer', 'basic', 'interactive', 'easyauth', or 'none'
   - authConfig: [Optional] Authentication configuration object (required if authType is not 'none')
     - token: Bearer token (required for authType='bearer')
     - username: Username (required for authType='basic')
     - password: Password (optional for authType='basic')
-    - clientId: Client ID (required for authType='interactive')
-    - tenantId: Tenant ID (optional for authType='interactive', defaults to 'common')
+    - clientId: Client ID (required for authType='interactive' or 'easyauth')
+    - tenantId: Tenant ID (optional for authType='interactive' or 'easyauth', defaults to 'common')
       ## Example usage:
   - Public Schema with direct path: fetch_openapi_schema({schemaUrl: "https://petstore.swagger.io/v2/swagger.json"})
   - Public Schema with base URL (auto-discovery): fetch_openapi_schema({schemaUrl: "https://petstore.swagger.io"})
@@ -33,10 +33,15 @@ export const fetchOpenApiSchemaTool = {
       authType: "bearer",
       authConfig: {token: "your-token-here"}
     })
+  - Azure App Service Easy Auth: fetch_openapi_schema({
+      schemaUrl: "https://myapp.azurewebsites.net", 
+      authType: "easyauth",
+      authConfig: {clientId: "your-client-id", tenantId: "your-tenant-id"}
+    })
   `,
     parameters: {
         schemaUrl: z.string().describe('URL where the OpenAPI schema is published'),
-        authType: z.enum(['bearer', 'basic', 'interactive', 'none']).default('none').describe('Authentication method if the schema requires auth'),
+        authType: z.enum(['bearer', 'basic', 'interactive', 'easyauth', 'none']).default('none').describe('Authentication method if the schema requires auth'),
         authConfig: z.object({
             token: z.string().optional().describe('Bearer token for token-based authentication'),
             username: z.string().optional().describe('Username for basic authentication'),
@@ -51,7 +56,7 @@ export const fetchOpenApiSchemaTool = {
     },
     handler: async ({ schemaUrl, authType, authConfig }: {
         schemaUrl: string;
-        authType?: 'bearer' | 'basic' | 'interactive' | 'none';
+        authType?: 'bearer' | 'basic' | 'interactive' | 'easyauth' | 'none';
         authConfig?: {
             token?: string;
             username?: string;

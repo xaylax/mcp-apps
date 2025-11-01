@@ -80,7 +80,7 @@ export class OpenApiService {
       /**
      * Try to find a valid schema by appending common schema paths to the base URL
      */
-    private static async tryDefaultSchemaEndpoints(baseUrl: string, authType?: 'bearer' | 'basic' | 'interactive' | 'none', authConfig?: any): Promise<ParsedSchema> {
+    private static async tryDefaultSchemaEndpoints(baseUrl: string, authType?: 'bearer' | 'basic' | 'interactive' | 'easyauth' | 'none', authConfig?: any): Promise<ParsedSchema> {
         // Remove trailing slash if present
         const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
         
@@ -163,7 +163,7 @@ export class OpenApiService {
         throw new Error(errorMsg);
     }
 
-    static async fetchSchema(url: string, authType?: 'bearer' | 'basic' | 'interactive' | 'none', authConfig?: any): Promise<ParsedSchema> {
+    static async fetchSchema(url: string, authType?: 'bearer' | 'basic' | 'interactive' | 'easyauth' | 'none', authConfig?: any): Promise<ParsedSchema> {
         // Check cache first
         if (this.cache[url] && (Date.now() - this.cache[url].timestamp < this.CACHE_TTL_MS)) {
             console.log(`Using cached OpenAPI schema for ${url}`);
