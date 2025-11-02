@@ -58,12 +58,6 @@ npm install
    - Environment variables for service principal
    - Managed identity (when running in Azure)
 
-## Configuration
-
-The server uses:
-- **Storage Account**: `maccsynapsedev.dfs.core.windows.net` (configurable via `AZURE_STORAGE_ACCOUNT_NAME`)
-- **Container**: `macc` (configurable via `AZURE_STORAGE_CONTAINER_NAME`)
-
 ## Available Tools
 
 ### create_delta_table
@@ -72,8 +66,8 @@ Creates a new Delta table with a specified schema. Supports simple and complex t
 **Parameters:**
 - `tablePath`: The path to the delta table (e.g., 'test-tables/my-table')
 - `schema`: Array of field definitions defining the table schema
-- `storageAccount`: Azure storage account name (default: 'maccsynapsedev')
-- `container`: Azure storage container name (default: 'macc')
+- `storageAccount`: Azure storage account name
+- `container`: Azure storage container name
 - `partitionBy`: Optional list of column names to partition by
 - `description`: Optional description for the table
 - `properties`: Optional table properties as key-value pairs
@@ -176,14 +170,6 @@ The server will connect via stdio and be available for MCP tool calls.
 - Supports any table path within the configured container
 - Automatic schema inference from data structure
 - Handles temporary file management for Parquet operations
-
-## Testing
-
-Perfect for testing various MACC milestones and CACO scenarios by providing simple, flexible read/write operations to Delta tables without complex schema management.
-    { "id": 2, "name": "Jane Smith" }
-  ]
-}
-```
 
 ### read_table_data
 Reads and returns all records from the Delta table.

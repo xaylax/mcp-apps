@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { SynapseService } from "../services/synapseService.js";
 
+// Common connection parameters schema
+const connectionParametersSchema = {
+  storageAccountName: z.string().optional().describe("Azure Storage account name (defaults to STORAGE_ACCOUNT_NAME env var)"),
+  fileSystemName: z.string().optional().describe("File system/container name (defaults to FILE_SYSTEM_NAME env var)"),
+  workspaceUrl: z.string().optional().describe("Synapse workspace URL (defaults to SYNAPSE_WORKSPACE_URL env var)")
+};
+
 // Schema for Delta table columns
 const DeltaColumnSchema = z.object({
   name: z.string().describe("Column name"),
@@ -15,19 +22,27 @@ export const createDeltaTableTool = {
   name: "create_delta_table",
   description: "Creates a new Delta table with the specified schema. Creates the proper Delta Lake transaction log with correct JSON Lines formatting.",
   parameters: {
-    tablePath: z.string().describe("The path where the Delta table should be created (e.g., 'data/ingestion/DeltaTables/my-table.delta')"),
+    tablePath: z.string().describe("The path where the Delta table should be created (e.g., 'data/mypath/DeltaTables/my-table.delta')"),
     columns: z.array(DeltaColumnSchema).describe("Array of column definitions for the table schema"),
     partitionColumns: z.array(z.string()).optional().default([]).describe("Optional list of column names to partition by"),
-    description: z.string().optional().describe("Optional description for the table")
+    description: z.string().optional().describe("Optional description for the table"),
+    ...connectionParametersSchema
   },
-  handler: async ({ tablePath, columns, partitionColumns = [], description }: {
+  handler: async ({ tablePath, columns, partitionColumns = [], description, storageAccountName, fileSystemName, workspaceUrl }: {
     tablePath: string;
     columns: Array<{ name: string; type: string; nullable?: boolean }>;
     partitionColumns?: string[];
     description?: string;
+    storageAccountName?: string;
+    fileSystemName?: string;
+    workspaceUrl?: string;
   }) => {
     try {
-      const synapseService = new SynapseService();
+      const synapseService = new SynapseService({
+        storageAccountName,
+        fileSystemName,
+        synapseWorkspaceUrl: workspaceUrl
+      });
       
       // Build the Delta Lake schema
       const fields = columns.map(col => ({

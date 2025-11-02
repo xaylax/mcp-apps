@@ -16,9 +16,17 @@ export class DeltaTableService {
   private arrowService: ArrowDeltaService;
 
   constructor() {
-    const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME || "maccsynapsedev";
-    this.containerName = process.env.AZURE_STORAGE_CONTAINER_NAME || "macc";
+    const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+    const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
     
+    if (!accountName) {
+      throw new Error("AZURE_STORAGE_ACCOUNT_NAME environment variable is required");
+    }
+    if (!containerName) {
+      throw new Error("AZURE_STORAGE_CONTAINER_NAME environment variable is required");
+    }
+    
+    this.containerName = containerName;
     const accountUrl = `https://${accountName}.dfs.core.windows.net`;
     this.client = new DataLakeServiceClient(accountUrl, new DefaultAzureCredential());
     this.arrowService = new ArrowDeltaService();

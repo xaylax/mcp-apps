@@ -46,26 +46,6 @@ Read all the data from the delta table at path "test-tables/employee-data"
 }
 ```
 
-### 3. MACC Milestone Testing Example
-
-**Prompt:**
-```
-Create test data for MACC milestone tracking. Write to table "macc/milestone-progress" with these milestone records:
-- Milestone M1: "Data Ingestion", status "Completed", completion date "2024-01-15", score 95
-- Milestone M2: "Data Processing", status "In Progress", target date "2024-02-01", score 60  
-- Milestone M3: "Data Validation", status "Not Started", target date "2024-02-15", score 0
-```
-
-### 4. CACO Use Case Testing Example
-
-**Prompt:**
-```
-Write CACO test results to table "caco/test-results/batch-001". Include these test cases:
-- Test case TC001: scenario "User Login", result "PASS", execution time 1250ms, timestamp now
-- Test case TC002: scenario "Data Export", result "FAIL", execution time 890ms, error "Timeout exceeded"
-- Test case TC003: scenario "Report Generation", result "PASS", execution time 2100ms, timestamp now
-```
-
 ### 5. Complex Data Structure Example
 
 **Prompt:**
@@ -110,5 +90,3 @@ Each table will create this structure in Azure:
 │   └── 00000000000000000001.json  # Data commit
 └── part-{timestamp}-{uuid}.snappy.parquet  # Your data
 ```
-
-Perfect for testing various MACC milestone scenarios and CACO use cases! 🚀

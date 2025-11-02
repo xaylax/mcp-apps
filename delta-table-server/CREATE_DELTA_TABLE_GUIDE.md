@@ -21,16 +21,6 @@ The `create_delta_table` tool allows you to create new Delta tables with explici
 | `tablePath` | string | The path to the delta table (e.g., 'data/tables/my-table.delta') |
 | `schema` | array | Array of field definitions defining the table schema |
 
-### Optional Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `storageAccount` | string | 'maccsynapsedev' | Azure storage account name |
-| `container` | string | 'macc' | Azure storage container name |
-| `partitionBy` | array | null | List of column names to partition by |
-| `description` | string | null | Description for the table |
-| `properties` | object | {} | Table properties as key-value pairs |
-
 ## Schema Field Definition
 
 Each field in the schema array has the following structure:

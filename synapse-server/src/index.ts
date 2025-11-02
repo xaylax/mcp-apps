@@ -2,7 +2,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
-import { uploadToAdlsTool, appendToAdlsTool, listAdlsFilesTool, createAdlsDirectoryTool } from "./tools/adls-tools.js";
 import { startPipelineTool, getPipelineStatusTool, cancelPipelineTool, listPipelinesTool } from "./tools/pipeline-tools.js";
 import { createDeltaTableTool } from "./tools/delta-table-tools.js";
 
@@ -17,35 +16,6 @@ async function main() {
         tools: {},
       },
     });
-
-    // ADLS Gen2 Tools
-    server.tool(
-      uploadToAdlsTool.name,
-      uploadToAdlsTool.description,
-      uploadToAdlsTool.parameters,
-      uploadToAdlsTool.handler
-    );
-
-    server.tool(
-      appendToAdlsTool.name,
-      appendToAdlsTool.description,
-      appendToAdlsTool.parameters,
-      appendToAdlsTool.handler
-    );
-
-    server.tool(
-      listAdlsFilesTool.name,
-      listAdlsFilesTool.description,
-      listAdlsFilesTool.parameters,
-      listAdlsFilesTool.handler
-    );
-
-    server.tool(
-      createAdlsDirectoryTool.name,
-      createAdlsDirectoryTool.description,
-      createAdlsDirectoryTool.parameters,
-      createAdlsDirectoryTool.handler
-    );
 
     // Synapse Pipeline Tools
     server.tool(

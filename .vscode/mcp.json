@@ -12,11 +12,7 @@
 			"command": "node",
 			"args": [
 				"c:\\Users\\aylaorucevic\\IdeaProjects\\mcp-apps\\kusto-server\\dist\\index.js"
-			],
-			"env": {
-				"KUSTO_CLUSTER_URL": "https://macc-dev-kusto.westus.kusto.windows.net/",
-				"KUSTO_DATABASE": "Macc"
-			}
+			]
 		},
 		"azure-devops": {
 			"type": "stdio",
@@ -34,23 +30,14 @@
 			"command": "node",
 			"args": [
 				"c:\\Users\\aylaorucevic\\IdeaProjects\\mcp-apps\\synapse-server\\dist\\index.js"
-			],
-			"env": {
-				"SYNAPSE_WORKSPACE_URL": "https://maccsynapse-dev-westus3.dev.azuresynapse.net",
-				"STORAGE_ACCOUNT_NAME": "maccsynapsedev",
-				"FILE_SYSTEM_NAME": "macc"
-			}
+			]
 		},
 		"delta-table-server": {
 			"type": "stdio",
 			"command": "node",
 			"args": [
 				"c:\\Users\\aylaorucevic\\IdeaProjects\\mcp-apps\\delta-table-server\\dist\\index.js"
-			],
-			"env": {
-				"AZURE_STORAGE_ACCOUNT_NAME": "maccsynapsedev",
-				"AZURE_STORAGE_CONTAINER_NAME": "macc"
-			}
+			]
 		}
 	},
 	"inputs": []

@@ -105,16 +105,6 @@ Reload the window to activate the MCP server
 
 ## 💡 Example Usage
 
-### Upload Invoice Data
-```typescript
-// Tool: upload_to_adls
-{
-  "filePath": "invoices/invoice-2025-10.json",
-  "data": "{\"invoiceId\": \"INV-123\", \"amount\": 1000}",
-  "format": "json"
-}
-```
-
 ### Start Data Processing Pipeline
 ```typescript
 // Tool: start_synapse_pipeline
@@ -139,7 +129,7 @@ Reload the window to activate the MCP server
 ## 🔗 Integration with Your Flow
 
 Based on your Kusto exploration, you can now:
-1. **Extract data** from `invoice-details` table using kusto-mcp
+1. **Extract data** from a table using kusto-mcp
 2. **Upload to ADLS Gen2** using synapse-server
 3. **Trigger processing pipelines** to transform the data
 4. **Monitor pipeline execution** for completion

@@ -1,16 +1,9 @@
 # Synapse MCP Server
 
 An MCP (Model Context Protocol) server for Azure Synapse Analytics, providing tools for:
-- **ADLS Gen2 Storage Operations**: Upload, append, list files, and manage directories
 - **Synapse Pipeline Management**: Start, stop, monitor pipeline runs
 
 ## Features
-
-### ADLS Gen2 Operations
-- `upload_to_adls`: Upload new files or overwrite existing ones
-- `append_to_adls`: Append data to existing files
-- `list_adls_files`: List files in a directory
-- `create_adls_directory`: Create new directories
 
 ### Delta Table Operations
 - `create_delta_table`: Create a new Delta table with a specified schema (properly formatted JSON Lines transaction log)
@@ -95,7 +88,7 @@ Add to your `.vscode/mcp.json`:
 {
   "tool": "create_delta_table",
   "arguments": {
-    "tablePath": "data/ingestion/DeltaTables/orders-history.delta",
+    "tablePath": "data/mypath/DeltaTables/my-table.delta",
     "columns": [
       { "name": "Version", "type": "long", "nullable": true },
       { "name": "Timestamp", "type": "timestamp", "nullable": true },
@@ -105,18 +98,6 @@ Add to your `.vscode/mcp.json`:
     ],
     "partitionColumns": [],
     "description": "Order history tracking table"
-  }
-}
-```
-
-### Upload a JSON file to ADLS Gen2
-```typescript
-{
-  "tool": "upload_to_adls",
-  "arguments": {
-    "filePath": "data/records/customer-001.json",
-    "data": "{\"id\": \"001\", \"name\": \"John Doe\"}",
-    "format": "json"
   }
 }
 ```

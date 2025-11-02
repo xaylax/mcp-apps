@@ -1,9 +1,5 @@
 # Delta Table MCP Server - Usage Guide
 
-## Quick Start
-
-The simplified Delta Table MCP Server provides basic read/write functionality for Delta tables on Azure Data Lake Storage. Perfect for testing MACC milestones and CACO use cases.
-
 ## Available Tools
 
 ### 1. `write_to_table`
@@ -77,34 +73,6 @@ Reads all records from a Delta table at the specified path.
   ]
 }
 ```
-
-### MACC Milestone Testing
-```json
-{
-  "tablePath": "macc/milestone-1/data",
-  "records": [
-    { "milestone": "M1", "status": "complete", "date": "2024-01-15", "score": 100 },
-    { "milestone": "M2", "status": "in-progress", "date": "2024-02-01", "score": 75 }
-  ]
-}
-```
-
-### CACO Use Case Testing
-```json
-{
-  "tablePath": "caco/use-case-1/results",
-  "records": [
-    { "case_id": "UC001", "result": "pass", "execution_time_ms": 1250 },
-    { "case_id": "UC002", "result": "fail", "execution_time_ms": 890 }
-  ]
-}
-```
-
-## Configuration
-
-Environment variables (optional):
-- `AZURE_STORAGE_ACCOUNT_NAME`: Storage account name (default: "maccsynapsedev")
-- `AZURE_STORAGE_CONTAINER_NAME`: Container name (default: "macc")
 
 ## Authentication
 
@@ -196,13 +164,6 @@ For production use, ensure you have:
    - Storage File Data SMB Share Contributor role
 
 3. **Network Access** to the Azure Data Lake Storage account
-
-## Storage Location
-
-The Delta table is created at:
-- **Account**: `maccsynapsedev.dfs.core.windows.net`
-- **Container**: `macc`
-- **Path**: `data/ingestion/DeltaTables/test.delta`
 
 ## Troubleshooting
 

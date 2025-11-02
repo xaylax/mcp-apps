@@ -8,10 +8,10 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 const WriteWithDeltaLakeArgsSchema = z.object({
-  tablePath: z.string().describe('The path to the delta table (e.g., data/ingestion/DeltaTables/invoice-details.delta)'),
+  tablePath: z.string().describe('The path to the delta table (e.g., data/tables/my-table.delta)'),
   records: z.array(z.record(z.any())).describe('Array of records to write'),
-  storageAccount: z.string().default('maccsynapsedev').describe('Azure storage account name'),
-  container: z.string().default('macc').describe('Azure storage container name'),
+  storageAccount: z.string().describe('Azure storage account name'),
+  container: z.string().describe('Azure storage container name'),
   mode: z.enum(['append', 'overwrite', 'error']).default('append').describe('Write mode: append, overwrite, or error if exists')
 });
 

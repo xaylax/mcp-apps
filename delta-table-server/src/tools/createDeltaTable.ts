@@ -31,8 +31,8 @@ const FieldSchema = z.object({
 const CreateDeltaTableArgsSchema = z.object({
   tablePath: z.string().describe('The path to the delta table (e.g., data/tables/my-table.delta)'),
   schema: z.array(FieldSchema).describe('Array of field definitions defining the table schema'),
-  storageAccount: z.string().default('maccsynapsedev').describe('Azure storage account name'),
-  container: z.string().default('macc').describe('Azure storage container name'),
+  storageAccount: z.string().describe('Azure storage account name'),
+  container: z.string().describe('Azure storage container name'),
   partitionBy: z.array(z.string()).optional().describe('Optional list of column names to partition by'),
   description: z.string().optional().describe('Optional description for the table'),
   properties: z.record(z.string()).optional().describe('Optional table properties as key-value pairs')

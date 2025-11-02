@@ -50,7 +50,7 @@ export const writeToTableTool = {
       if (isAuthError) {
         troubleshootingTips += `⚠️  **Azure Authentication Issue Detected**\n` +
                               `- Run 'az login' to authenticate with Azure\n` +
-                              `- Verify you have write permissions to storage account: ${process.env.AZURE_STORAGE_ACCOUNT_NAME || 'maccsynapsedev'}\n` +
+                              `- Verify you have write permissions to storage account \n` +
                               `- Check your Azure role assignments (need Storage Blob Data Contributor or similar)\n` +
                               `- Ensure DefaultAzureCredential can find valid credentials\n\n`;
       } else if (isSchemaError) {

@@ -1,21 +1,29 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import { DataLakeServiceClient } from "@azure/storage-file-datalake";
 
+export interface SynapseServiceConfig {
+  synapseWorkspaceUrl?: string;
+  storageAccountName?: string;
+  fileSystemName?: string;
+}
+
 export class SynapseService {
   private credential: DefaultAzureCredential;
   private synapseWorkspaceUrl: string;
   private storageAccountName: string;
   private fileSystemName: string;
 
-  constructor() {
+  constructor(config?: SynapseServiceConfig) {
     this.credential = new DefaultAzureCredential();
-    this.synapseWorkspaceUrl = process.env.SYNAPSE_WORKSPACE_URL || "";
-    this.storageAccountName = process.env.STORAGE_ACCOUNT_NAME || "";
-    this.fileSystemName = process.env.FILE_SYSTEM_NAME || "";
+    
+    // Accept parameters from config or fall back to environment variables
+    this.synapseWorkspaceUrl = config?.synapseWorkspaceUrl || process.env.SYNAPSE_WORKSPACE_URL || "";
+    this.storageAccountName = config?.storageAccountName || process.env.STORAGE_ACCOUNT_NAME || "";
+    this.fileSystemName = config?.fileSystemName || process.env.FILE_SYSTEM_NAME || "";
 
-    if (!this.synapseWorkspaceUrl) throw new Error("SYNAPSE_WORKSPACE_URL environment variable is required");
-    if (!this.storageAccountName) throw new Error("STORAGE_ACCOUNT_NAME environment variable is required");
-    if (!this.fileSystemName) throw new Error("FILE_SYSTEM_NAME environment variable is required");
+    if (!this.synapseWorkspaceUrl) throw new Error("synapseWorkspaceUrl is required (provide in config or SYNAPSE_WORKSPACE_URL environment variable)");
+    if (!this.storageAccountName) throw new Error("storageAccountName is required (provide in config or STORAGE_ACCOUNT_NAME environment variable)");
+    if (!this.fileSystemName) throw new Error("fileSystemName is required (provide in config or FILE_SYSTEM_NAME environment variable)");
   }
 
   getDataLakeServiceClient(): DataLakeServiceClient {

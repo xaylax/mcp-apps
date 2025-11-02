@@ -5,9 +5,6 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 
 import { writeToTableTool } from "./tools/writeToTable.js";
 import { readFromTableTool } from "./tools/readFromTable.js";
-import { writeWithPySparkTool } from "./tools/writeWithPySpark.js";
-import { writeWithScalaSparkTool } from "./tools/writeWithScalaSpark.js";
-import { writeInvoiceDetailsWithSchemaTool } from "./tools/writeInvoiceDetailsWithSchema.js";
 import { writeWithDeltaLakeTool } from "./tools/writeWithDeltaLake.js";
 import { createDeltaTableTool } from "./tools/createDeltaTable.js";
 
@@ -34,27 +31,6 @@ server.tool(
   readFromTableTool.description,
   readFromTableTool.parameters,
   readFromTableTool.handler
-);
-
-server.tool(
-  writeWithPySparkTool.name,
-  writeWithPySparkTool.description,
-  writeWithPySparkTool.parameters,
-  writeWithPySparkTool.handler
-);
-
-server.tool(
-  writeWithScalaSparkTool.name,
-  writeWithScalaSparkTool.description,
-  writeWithScalaSparkTool.parameters,
-  writeWithScalaSparkTool.handler
-);
-
-server.tool(
-  writeInvoiceDetailsWithSchemaTool.name,
-  writeInvoiceDetailsWithSchemaTool.description,
-  writeInvoiceDetailsWithSchemaTool.parameters,
-  writeInvoiceDetailsWithSchemaTool.handler
 );
 
 server.tool(
