@@ -56,39 +56,28 @@ export const getRepositoryFileTool = {
             const fileViewUrl = `${organizationUrl}/${project}/_git/${repositoryName}?path=${encodeURIComponent(filePath)}&version=GB${encodeURIComponent(branch)}&_a=contents`;
             
             try {
-                // Get the file content from the repository
-                const item = await gitApi.getItem(
-                    repository.id,
-                    filePath,
-                    project,
-                    undefined, // scopePath
-                    undefined, // recursionLevel
-                    undefined, // includeContentMetadata
-                    undefined, // latestProcessedChange
-                    undefined, // download
-                    { version: branch, versionType: 0 } // versionDescriptor (0 = branch)
-                );
+                // Try to get basic repository info
+                const branchExists = await gitApi.getBranch(repository.id, branch);
                 
-                if (!item || !item.content) {
+                if (!branchExists) {
                     return {
-                        content: [{ 
-                            type: "text" as const, 
-                            text: `File "${filePath}" not found on branch "${branch}" in repository "${repositoryName}".\n\nView in browser: ${fileViewUrl}` 
-                        }],
+                        content: [{ type: "text" as const, text: `Branch "${branch}" not found in repository "${repositoryName}".` }],
                     };
                 }
                 
                 return {
                     content: [{ 
                         type: "text" as const, 
-                        text: `File: ${filePath}
-Repository: ${repositoryName}
-Branch: ${branch}
-View in browser: ${fileViewUrl}
+                        text: `
+                        File: ${filePath}
+                        Repository: ${repositoryName}
+                        Branch: ${branch}
 
---- FILE CONTENT START ---
-${item.content}
---- FILE CONTENT END ---`
+                        To view this file in your browser, visit:
+                        ${fileViewUrl}
+
+                        Note: Due to API limitations in the Azure DevOps client, the file content cannot be displayed directly. 
+                        Please use the link above to view the file in the Azure DevOps web interface.`
                     }],
                 };
                 

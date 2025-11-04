@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { getAccessToken } from './token-manager';
 
 export interface ApiRequestConfig {
@@ -8,7 +8,7 @@ export interface ApiRequestConfig {
   queryParams?: Record<string, string>;
   headers?: Record<string, string>;
   body?: any;
-  authType?: 'bearer' | 'basic' | 'interactive' | 'easyauth' | 'none';
+  authType?: 'bearer' | 'basic' | 'interactive' | 'none';
   authConfig?: {
     token?: string;
     username?: string;
@@ -32,51 +32,6 @@ export interface ApiResponse<T = any> {
 }
 
 export class ApiService {
-  // Cache for Easy Auth session cookies per endpoint
-  private static easyAuthCookies: Map<string, string> = new Map();
-
-  /**
-   * Authenticate with Azure App Service Easy Auth endpoint
-   */
-  private static async authenticateWithEasyAuth(baseUrl: string, clientId: string, tenantId: string, scopes?: string[]): Promise<string> {
-    // Check if we have cached cookies for this endpoint
-    const cached = this.easyAuthCookies.get(baseUrl);
-    if (cached) {
-      return cached;
-    }
-
-    try {
-      // Get an access token from Azure AD
-      const token = await getAccessToken(clientId, tenantId, scopes);
-
-      // Exchange the token with App Service Easy Auth
-      const authUrl = `${baseUrl}/.auth/login/aad`;
-      
-      const response = await axios.post(authUrl, {
-        access_token: token
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        maxRedirects: 0,
-        validateStatus: (status) => status === 200 || status === 302
-      });
-
-      // Extract cookies from response
-      const setCookieHeaders = response.headers['set-cookie'];
-      if (setCookieHeaders && setCookieHeaders.length > 0) {
-        const cookieString = setCookieHeaders.map((cookie: string) => cookie.split(';')[0]).join('; ');
-        this.easyAuthCookies.set(baseUrl, cookieString);
-        return cookieString;
-      }
-
-      throw new Error('No cookies received from Easy Auth endpoint');
-    } catch (error: any) {
-      console.error('Easy Auth authentication failed:', error.message);
-      throw new Error(`Easy Auth failed: ${error.message}`);
-    }
-  }
-
   static async callApi<T = any>(config: ApiRequestConfig): Promise<ApiResponse<T>> {
     try {
       const url = this.buildUrl(config.endpoint, config.path, config.queryParams);
@@ -101,8 +56,6 @@ export class ApiService {
           const token = await getAccessToken(config.authConfig?.clientId, config.authConfig?.tenantId, config.authConfig?.scopes);
 
           headers['Authorization'] = `Bearer ${token}`;
-          // Add Azure App Service Easy Auth headers for compatibility
-          headers['X-MS-TOKEN-AAD-ACCESS-TOKEN'] = token;
 
         } catch (authError: any) {
           console.error('Interactive authentication error:', authError);
@@ -110,33 +63,6 @@ export class ApiService {
             success: false,
             status: 401,
             error: `Authentication error: ${authError.message || 'Unknown authentication error'}`
-          };
-        }
-      } else if (config.authType === 'easyauth') {
-        try {
-          if (!config.authConfig?.clientId) {
-            throw new Error('clientId is required for Easy Auth');
-          }
-          
-          // Extract base URL from endpoint
-          const baseUrl = new URL(config.endpoint).origin;
-          
-          // Get Easy Auth cookies
-          const cookies = await this.authenticateWithEasyAuth(
-            baseUrl,
-            config.authConfig.clientId,
-            config.authConfig.tenantId || 'common',
-            config.authConfig.scopes
-          );
-
-          headers['Cookie'] = cookies;
-
-        } catch (authError: any) {
-          console.error('Easy Auth authentication error:', authError);
-          return {
-            success: false,
-            status: 401,
-            error: `Easy Auth error: ${authError.message || 'Unknown authentication error'}`
           };
         }
       }
