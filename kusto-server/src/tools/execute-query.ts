@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { KustoService } from "../services/kustoService.js";
+import { KustoService } from "../services/kustoService";
 
 // Tool to execute KQL queries
 export const executeQueryTool = {
