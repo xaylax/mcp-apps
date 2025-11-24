@@ -19,7 +19,8 @@
     "debug": "npx @modelcontextprotocol/inspector node dist/index.js"
   },
   "dependencies": {
-    "@azure/identity": "^4.5.0",
+    "@azure/identity": "^4.10.1",
+    "@azure/identity-broker": "^1.1.0",
     "@azure/storage-blob": "^12.25.0",
     "@azure/storage-file-datalake": "^12.24.0",
     "@azure/synapse-artifacts": "^1.0.0-beta.15",

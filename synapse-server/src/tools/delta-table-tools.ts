@@ -13,7 +13,7 @@ const DeltaColumnSchema = z.object({
   name: z.string().describe("Column name"),
   type: z.enum([
     "string", "long", "int", "double", "float", "boolean", 
-    "timestamp", "date", "binary", "decimal", "byte", "short"
+    "timestamp", "date", "binary", "decimal", "byte", "short", "dynamic"
   ]).describe("Column data type"),
   nullable: z.boolean().default(true).describe("Whether the column can be null")
 });
@@ -24,7 +24,7 @@ export const createDeltaTableTool = {
   parameters: {
     tablePath: z.string().describe("The path where the Delta table should be created (e.g., 'data/mypath/DeltaTables/my-table.delta')"),
     columns: z.array(DeltaColumnSchema).describe("Array of column definitions for the table schema"),
-    partitionColumns: z.array(z.string()).optional().default([]).describe("Optional list of column names to partition by"),
+    partitionColumns: z.array(z.string()).describe("Optional list of column names to partition by").optional().default([]),
     description: z.string().optional().describe("Optional description for the table"),
     ...connectionParametersSchema
   },

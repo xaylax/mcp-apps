@@ -18,7 +18,13 @@ const WriteWithDeltaLakeArgsSchema = z.object({
 export const writeWithDeltaLakeTool = {
   name: 'write_with_deltalake',
   description: 'Writes records to a Delta table using the deltalake Python library (no Spark required). This bypasses Spark compatibility issues.',
-  parameters: WriteWithDeltaLakeArgsSchema.shape,
+  parameters: {
+    tablePath: z.string().describe('The path to the delta table (e.g., data/tables/my-table.delta)'),
+    records: z.array(z.record(z.any())).describe('Array of records to write'),
+    storageAccount: z.string().describe('Azure storage account name'),
+    container: z.string().describe('Azure storage container name'),
+    mode: z.enum(['append', 'overwrite', 'error']).default('append').describe('Write mode: append, overwrite, or error if exists')
+  },
   handler: async (args: z.infer<typeof WriteWithDeltaLakeArgsSchema>) => {
     const { tablePath, records, storageAccount, container, mode } = args;
 

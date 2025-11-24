@@ -1,5 +1,9 @@
-import { ChainedTokenCredential, InteractiveBrowserCredential } from "@azure/identity";
+import { ChainedTokenCredential, InteractiveBrowserCredential, useIdentityPlugin } from "@azure/identity";
+import { nativeBrokerPlugin } from "@azure/identity-broker";
 import * as dotenv from "dotenv";
+
+// Initialize the broker plugin for WAM support
+useIdentityPlugin(nativeBrokerPlugin);
 
 dotenv.config();
 
@@ -16,7 +20,7 @@ function createCacheKey(clientId: string, tenantId: string): string {
   return `${clientId}|${tenantId}`;
 }
 
-export async function getAccessToken(clientId: string | undefined, tenantId: string | undefined, scopes: string[] | undefined): Promise<string> {
+export async function getAccessToken(clientId: string | undefined, tenantId: string | undefined, scopes: string[] | undefined, useBroker: boolean = true): Promise<string> {
   const now = Date.now();
 
   // Resolve clientId and tenantId, using environment variables as fallback
@@ -33,13 +37,26 @@ export async function getAccessToken(clientId: string | undefined, tenantId: str
   }
 
   try {
-    const credential = new InteractiveBrowserCredential(
-      {
-        clientId: resolvedClientId,
-        tenantId: resolvedTenantId,
-        loginStyle: "popup"
-      }
-    );
+    const credentialOptions: any = {
+      clientId: resolvedClientId,
+      tenantId: resolvedTenantId,
+      loginStyle: "popup"
+    };
+
+    // Add broker authentication if requested
+    if (useBroker) {
+      console.log("Using Windows broker authentication (WAM) for interactive login");
+      credentialOptions.brokerOptions = {
+        enabled: true,
+        parentWindowHandle: new Uint8Array(0), // Empty Uint8Array will use the active window
+        useDefaultBrokerAccount: false, // Try default account before falling back to interactive
+        legacyEnableMsaPassthrough: true // Set to true if MSA account passthrough is needed
+      };
+    } else {
+      console.log("Using standard interactive browser authentication (WAM disabled)");
+    }
+
+    const credential = new InteractiveBrowserCredential(credentialOptions);
 
     const tokenResponse = await credential.getToken([`${resolvedClientId}/.default`].concat(scopes ? scopes : []));
 
@@ -49,6 +66,7 @@ export async function getAccessToken(clientId: string | undefined, tenantId: str
 
     // Set expiration time (expiresOn is in seconds from epoch)
     const expirationTime = tokenResponse.expiresOnTimestamp;
+    console.log(`Token acquired, expires at: ${new Date(expirationTime).toISOString()}`);
     const expiresAt = expirationTime - (5 * 60 * 1000); // Token lifetime minus 5 minute safety buffer
 
     // Store the token in cache using the client+tenant key

@@ -194,12 +194,17 @@ Populates the Delta table with 5 predefined test records for demonstration purpo
 
 ## Authentication
 
-This server uses Azure Default Credential which supports multiple authentication methods:
-- Azure CLI
-- Managed Identity
-- Environment Variables
-- Visual Studio Code
-- Azure PowerShell
+This server uses **WAM (Windows Authentication Manager) broker** with interactive authentication for secure access to Azure Storage:
+
+- **Interactive Browser Authentication**: Uses Windows broker authentication (WAM) with popup login
+- **Token Caching**: Automatically caches and refreshes access tokens
+- **Multi-tenant Support**: Supports authentication across Azure tenants
+
+### Environment Variables
+
+Optional environment variables for authentication:
+- `AZURE_CLIENT_ID`: Azure AD application client ID (optional)
+- `AZURE_TENANT_ID`: Azure AD tenant ID (optional, defaults to "common")
 
 Make sure you have appropriate permissions to read/write to the specified Azure Data Lake Storage account.
 
